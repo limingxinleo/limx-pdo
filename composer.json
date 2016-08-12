@@ -3,5 +3,8 @@
     "description": "This is a pdo demo",
     "type": "library",
     "license": "MIT",
+    "autoload": {
+        "psr-4": { "Limx\\Tools\\": "src" }
+    },
     "require": {}
 }
