@@ -1,0 +1,7 @@
+{
+    "name": "limingxinleo/limx-pdo",
+    "description": "This is a pdo demo",
+    "type": "library",
+    "license": "MIT",
+    "require": {}
+}
