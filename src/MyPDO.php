@@ -9,6 +9,7 @@
 // | Date: 2016/7/28 Time: 16:01
 // +----------------------------------------------------------------------
 namespace Limx\Tools;
+use PDO;
 class MyPDO
 {
     protected static $_instance = null;
