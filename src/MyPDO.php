@@ -9,7 +9,9 @@
 // | Date: 2016/7/28 Time: 16:01
 // +----------------------------------------------------------------------
 namespace limx\tools;
+
 use PDO;
+
 class MyPDO
 {
     protected static $_instance = null;
@@ -36,7 +38,7 @@ class MyPDO
             $this->dsn = 'mysql:host=' . $dbHost . ';dbname=' . $dbName;
             $params = [];
             if ($dbParams) {
-                $params = $this->params + $dbParams;
+                $params = $dbParams + $this->params;
             } else {
                 $params = $this->params;
             }
