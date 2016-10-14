@@ -11,17 +11,16 @@
 
 namespace limx\tools;
 
-use limx\func\Debug;
-
 require_once '../src/MyPDO.php';
-require_once __DIR__ . '/../../limx-func/src/Debug.php';
+require_once 'helper.php';
+
 $config['pwd'] = '910123';
 $M = MyPDO::getInstance($config);
-$sql = 'select * from test where id = ?;';
-Debug::dump($M->query($sql, [3]));
-Debug::dump($M->getMaxValue('test', 'id'));
-Debug::dump($M->getCount('test', 'id'));
-Debug::dump($M->getTableEngine('my_db', 'test'));
-Debug::dump($M->getTable('test'));
-
-
+$sql = 'select * from test where id = ? and username = ?;';
+dump($M->query($sql, [3, 3]));
+dump($M->getMaxValue('test', 'id'));
+dump($M->getCount('test', 'id'));
+dump($M->getTableEngine('my_db', 'test'));
+dump($M->getTable('test'));
+$time = time();
+dump($M->execute('insert into test (username) values(?)', [$time]));

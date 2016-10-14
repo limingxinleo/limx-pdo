@@ -212,6 +212,22 @@ class MyPDO
     }
 
     /**
+     * [execute]
+     * @desc 执行sql
+     * @author limx
+     * @param $strSql sql语句
+     * @param array $bind 参数
+     * @param bool $debug 是否DEBUG
+     */
+    public function execute($strSql, $bind = [], $debug = false)
+    {
+        if ($debug === true) $this->debug($strSql);
+        $stmt = $this->dbh->prepare($strSql);
+        $this->getPDOError();
+        return $stmt->execute($bind);
+    }
+
+    /**
      * 获取字段最大值
      *
      * @param string $table 表名
