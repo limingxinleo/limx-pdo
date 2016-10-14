@@ -90,12 +90,14 @@ class MyPDO
      * @param Boolean $debug
      * @return Array
      */
-    public function query($strSql, $queryMode = 'All', $debug = false)
+    public function query($strSql, $bind = [], $queryMode = 'All', $debug = false)
     {
         if ($debug === true) $this->debug($strSql);
-        $recordset = $this->dbh->query($strSql);
-        $this->getPDOError();
-        if ($recordset) {
+
+        $recordset = $this->dbh->prepare($strSql);
+        $status = $recordset->execute($bind);
+        //        $recordset = $this->dbh->query($strSql);
+        if ($status) {
             $recordset->setFetchMode(PDO::FETCH_ASSOC);
             if ($queryMode == 'All') {
                 $result = $recordset->fetchAll();
@@ -106,6 +108,7 @@ class MyPDO
             $result = null;
         }
         return $result;
+
     }
 
     /**
@@ -220,7 +223,7 @@ class MyPDO
         $strSql = "SELECT MAX(" . $field_name . ") AS MAX_VALUE FROM $table";
         if ($where != '') $strSql .= " WHERE $where";
         if ($debug === true) $this->debug($strSql);
-        $arrTemp = $this->query($strSql, 'Row');
+        $arrTemp = $this->query($strSql, [], 'Row');
         $maxValue = $arrTemp["MAX_VALUE"];
         if ($maxValue == "" || $maxValue == null) {
             $maxValue = 0;
@@ -242,7 +245,7 @@ class MyPDO
         $strSql = "SELECT COUNT($field_name) AS NUM FROM $table";
         if ($where != '') $strSql .= " WHERE $where";
         if ($debug === true) $this->debug($strSql);
-        $arrTemp = $this->query($strSql, 'Row');
+        $arrTemp = $this->query($strSql, [], 'Row');
         return $arrTemp['NUM'];
     }
 
@@ -337,23 +340,25 @@ class MyPDO
     /**
      * beginTransaction 事务开始
      */
-    private function beginTransaction()
+    public function beginTransaction()
     {
         $this->dbh->beginTransaction();
     }
 
     /**
-     * commit 事务提交
+     * [trans desc]
+     * @desc 开启事务
+     * @author limx
      */
-    private function commit()
+    public function trans()
     {
-        $this->dbh->commit();
+        $this->dbh->beginTransaction();
     }
 
     /**
      * rollback 事务回滚
      */
-    private function rollback()
+    public function rollback()
     {
         $this->dbh->rollback();
     }
