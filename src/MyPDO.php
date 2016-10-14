@@ -380,6 +380,14 @@ class MyPDO
     }
 
     /**
+     * rollback 事务提交
+     */
+    public function commit()
+    {
+        $this->dbh->commit();
+    }
+
+    /**
      * transaction 通过事务处理多条SQL语句
      * 调用前需通过getTableEngine判断表引擎是否支持事务
      *
