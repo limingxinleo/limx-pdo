@@ -24,3 +24,9 @@ dump($M->getTableEngine('my_db', 'test'));
 dump($M->getTable('test'));
 $time = time();
 dump($M->execute('insert into test (username) values(?)', [$time]));
+
+$config['dbname'] = 'db_test';
+$M2 = MyPDO::getInstance($config);
+dump($M2->getTableEngine('db_test', 'tb_test'));
+
+dump(MyPDO::retInstances());

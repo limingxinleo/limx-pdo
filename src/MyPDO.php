@@ -14,7 +14,7 @@ use PDO;
 
 class MyPDO
 {
-    protected static $_instance = null;
+    protected static $_instance = [];
     protected $dbName = '';
     protected $dsn;
     protected $dbh;
@@ -32,10 +32,10 @@ class MyPDO
      *
      * @return MyPDO
      */
-    private function __construct($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
+    private function __construct($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
     {
         try {
-            $this->dsn = 'mysql:host=' . $dbHost . ';dbname=' . $dbName;
+            $this->dsn = $dbType . ':host=' . $dbHost . ';dbname=' . $dbName;
             $params = [];
             if ($dbParams) {
                 $params = $dbParams + $this->params;
@@ -47,6 +47,11 @@ class MyPDO
         } catch (PDOException $e) {
             $this->outputError($e->getMessage());
         }
+    }
+
+    public static function retInstances()
+    {
+        return self::$_instance;
     }
 
     /**
@@ -69,6 +74,7 @@ class MyPDO
             $config = $config + $default;
         }
 
+        $dbType = $config['type'];
         $dbHost = $config['host'];
         $dbUser = $config['user'];
         $dbPasswd = $config['pwd'];
@@ -76,10 +82,12 @@ class MyPDO
         $dbCharset = $config['charset'];
         $dbParams = $config['params'];
 
-        if (self::$_instance === null) {
-            self::$_instance = new self($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams);
+        $key = md5(json_encode($config));
+
+        if (empty(self::$_instance[$key])) {
+            self::$_instance[$key] = new self($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams);
         }
-        return self::$_instance;
+        return self::$_instance[$key];
     }
 
     /**
