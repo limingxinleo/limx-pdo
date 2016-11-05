@@ -32,26 +32,83 @@ class MyPDO
      *
      * @return MyPDO
      */
-    private function __construct($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
+    protected function __construct($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
     {
         try {
-            $this->dsn = $dbType . ':host=' . $dbHost . ';dbname=' . $dbName;
-            $params = [];
-            if ($dbParams) {
-                $params = $dbParams + $this->params;
-            } else {
-                $params = $this->params;
+            switch ($dbType) {
+                case 'sqlite':
+                    $this->sqlite($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams);
+                    break;
+                case 'mysql':
+                default:
+                    $this->mysql($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams);
             }
-            $this->dbh = new PDO($this->dsn, $dbUser, $dbPasswd, $params);
-            $this->dbh->exec('SET character_set_connection=' . $dbCharset . ', character_set_results=' . $dbCharset . ', character_set_client=binary');
+
         } catch (PDOException $e) {
             $this->outputError($e->getMessage());
         }
     }
 
+    /**
+     * [sqlite desc]
+     * @desc    sqlite 初始化
+     * @author limx
+     * @param $dbHost
+     * @param $dbUser
+     * @param $dbPasswd
+     * @param $dbName
+     * @param $dbCharset
+     * @param $dbParams
+     */
+    private function sqlite($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
+    {
+        $root = dirname($dbName);
+        if (!is_dir($root)) {
+            mkdir($root, 0777, true);
+        }
+        $this->dsn = 'sqlite:' . $dbName;
+        $this->dbh = new PDO($this->dsn);
+        $this->dbh->setAttribute(PDO::ATTR_ERRMODE,
+            PDO::ERRMODE_EXCEPTION);
+    }
+
+    /**
+     * [mysql desc]
+     * @desc mysql 初始化
+     * @author limx
+     * @param $dbType
+     * @param $dbHost
+     * @param $dbUser
+     * @param $dbPasswd
+     * @param $dbName
+     * @param $dbCharset
+     * @param $dbParams
+     */
+    private function mysql($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
+    {
+        $this->dsn = 'mysql:host=' . $dbHost . ';dbname=' . $dbName;
+        $params = [];
+        if ($dbParams) {
+            $params = $dbParams + $this->params;
+        } else {
+            $params = $this->params;
+        }
+        $this->dbh = new PDO($this->dsn, $dbUser, $dbPasswd, $params);
+        $this->dbh->exec('SET character_set_connection=' . $dbCharset . ', character_set_results=' . $dbCharset . ', character_set_client=binary');
+    }
+
     public static function retInstances()
     {
         return self::$_instance;
+    }
+
+    public static function retInstanceKey($config = [])
+    {
+        if (file_exists(__DIR__ . '/config.php')) {
+            $default = include('config.php');
+            $config = $config + $default;
+        }
+        return md5(json_encode($config));
     }
 
     /**

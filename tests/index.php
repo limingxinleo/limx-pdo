@@ -29,4 +29,20 @@ $config['dbname'] = 'db_test';
 $M2 = MyPDO::getInstance($config);
 dump($M2->getTableEngine('db_test', 'tb_test'));
 
+$config['dbname'] = __DIR__ . '/ss/sqlite.db';
+$config['type'] = 'sqlite';
+$M3 = MyPDO::getInstance($config);
+$sql = "CREATE TABLE IF NOT EXISTS messages (
+                    id INTEGER PRIMARY KEY,
+                    title TEXT,
+                    message TEXT,
+                    time INTEGER)";
+$M3->execute($sql);
+$insert = "INSERT INTO messages (title, message, time) VALUES (?, ?, ?)";
+$M3->execute($insert, ['t1', 'm1', time()]);
+$M3->execute($insert, ['t2', 'm2', time()]);
+$M3->execute($insert, ['t3', 'm3', time()]);
+dump($M3->query("SELECT * FROM messages LIMIT 0,5;"));
+
 dump(MyPDO::retInstances());
+dump(MyPDO::retInstanceKey($config));
