@@ -35,7 +35,7 @@ class MyPDO
     protected function __construct($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
     {
         try {
-            switch ($dbType) {
+            switch (strtolower($dbType)) {
                 case 'sqlite':
                     $this->sqlite($dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams);
                     break;
@@ -161,7 +161,6 @@ class MyPDO
 
         $recordset = $this->dbh->prepare($strSql);
         $status = $recordset->execute($bind);
-        //        $recordset = $this->dbh->query($strSql);
         if ($status) {
             $recordset->setFetchMode(PDO::FETCH_ASSOC);
             if ($queryMode == 'All') {
@@ -173,7 +172,30 @@ class MyPDO
             $result = null;
         }
         return $result;
+    }
 
+    /**
+     * [fetch desc]
+     * @desc 查询单条数据
+     * @author limx
+     * @param $strSql sql语句
+     * @param array $bind 绑定的数据
+     * @param bool $debug
+     * @return null
+     */
+    public function fetch($strSql, $bind = [], $debug = false)
+    {
+        if ($debug === true) $this->debug($strSql);
+
+        $recordset = $this->dbh->prepare($strSql);
+        $status = $recordset->execute($bind);
+        if ($status) {
+            $recordset->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $recordset->fetch();
+        } else {
+            $result = null;
+        }
+        return $result;
     }
 
     /**
