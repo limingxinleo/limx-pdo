@@ -392,7 +392,7 @@ class MyPDO
     {
         $table = $this->getTable($tableName);
         if (empty($table)) {
-            return $this->execSql($sql);
+            return $this->execute($sql);
         }
         return false;
     }
@@ -408,34 +408,22 @@ class MyPDO
      * @param string $comment 注释
      * @return bool|Int
      */
-    public function addFieldbyTable($field, $table, $type = 'int', $len = 11, $default = 0, $comment = "")
+    public function addFieldbyTable($field, $table, $type = 'int', $len = 11, $default = null, $comment = null, $notnull = false)
     {
         if (!$this->checkFieldByTable($field, $table)) {
-            $sql = " ALTER TABLE $table ADD COLUMN $field ";
-            switch ($type) {
-                case 'int':
-                    $sql .= " INT($len) ";
-                    $sql .= " NOT NULL DEFAULT " . $default;
-                    break;
-                case 'varchar':
-                    $sql .= " VARCHAR($len) ";
-                    $sql .= " NOT NULL DEFAULT '" . $default . "'";
-                    break;
-                case 'datetime':
-                    $sql .= " DATETIME ";
-                    $sql .= " NOT NULL DEFAULT '1900-01-01 00:00:00'";
-                    break;
-                default:
-                    $sql .= " VARCHAR($len) ";
-                    $sql .= " NOT NULL DEFAULT '" . $default . "'";
-                    break;
+            $sql = " ALTER TABLE {$table} ADD COLUMN {$field} $type({$len}) ";
+            if ($notnull) {
+                $sql .= " NOT NULL ";
+            }
+            if ($default !== null) {
+                $default = is_int($default) ? $default : "'{$default}'";
+                $sql .= " DEFAULT {$default}";
+            }
+            if ($comment !== null) {
+                $sql .= " COMMENT '{$comment}' ";
             }
 
-            if (!empty($comment)) {
-                $sql .= " COMMENT '" . $comment . "' ";
-            }
-
-            return $this->execSql($sql);
+            return $this->execute($sql);
         }
         return false;
     }
