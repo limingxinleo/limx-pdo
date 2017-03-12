@@ -29,7 +29,6 @@ class MyPDO
 
     /**
      * 构造
-     *
      * @return MyPDO
      */
     protected function __construct($dbType, $dbHost, $dbUser, $dbPasswd, $dbName, $dbCharset, $dbParams)
@@ -52,7 +51,7 @@ class MyPDO
     /**
      * [sqlite desc]
      * @desc    sqlite 初始化
-     * @author limx
+     * @author  limx
      * @param $dbHost
      * @param $dbUser
      * @param $dbPasswd
@@ -74,7 +73,7 @@ class MyPDO
 
     /**
      * [mysql desc]
-     * @desc mysql 初始化
+     * @desc   mysql 初始化
      * @author limx
      * @param $dbType
      * @param $dbHost
@@ -113,16 +112,24 @@ class MyPDO
 
     /**
      * 防止克隆
-     *
      */
     private function __clone()
     {
     }
 
     /**
-     * Singleton instance
-     *
-     * @return Object
+     * @desc   Singleton instance
+     * @author limx
+     * @param  $config
+     *    'dsn' => 'mysql:dbname=my_db;host=127.0.0.1',
+     *    'type' => 'mysql',
+     *    'host' => '127.0.0.1',
+     *    'dbname' => 'my_db',
+     *    'user' => 'root',
+     *    'pwd' => '910123',
+     *    'charset' => 'utf8',
+     *    'params' => [],
+     * @return mixed
      */
     public static function getInstance($config = [])
     {
@@ -149,9 +156,8 @@ class MyPDO
 
     /**
      * Query 查询
-     *
-     * @param String $strSql SQL语句
-     * @param String $queryMode 查询方式(All or Row)
+     * @param String  $strSql    SQL语句
+     * @param String  $queryMode 查询方式(All or Row)
      * @param Boolean $debug
      * @return Array
      */
@@ -176,11 +182,11 @@ class MyPDO
 
     /**
      * [fetch desc]
-     * @desc 查询单条数据
+     * @desc   查询单条数据
      * @author limx
-     * @param $strSql sql语句
-     * @param array $bind 绑定的数据
-     * @param bool $debug
+     * @param       $strSql sql语句
+     * @param array $bind   绑定的数据
+     * @param bool  $debug
      * @return null
      */
     public function fetch($strSql, $bind = [], $debug = false)
@@ -200,10 +206,9 @@ class MyPDO
 
     /**
      * Update 更新
-     *
-     * @param String $table 表名
-     * @param Array $arrayDataValue 字段与值
-     * @param String $where 条件
+     * @param String  $table          表名
+     * @param Array   $arrayDataValue 字段与值
+     * @param String  $where          条件
      * @param Boolean $debug
      * @return Int
      */
@@ -228,9 +233,8 @@ class MyPDO
 
     /**
      * Insert 插入
-     *
-     * @param String $table 表名
-     * @param Array $arrayDataValue 字段与值
+     * @param String  $table          表名
+     * @param Array   $arrayDataValue 字段与值
      * @param Boolean $debug
      * @return Int
      */
@@ -246,9 +250,8 @@ class MyPDO
 
     /**
      * Replace 覆盖方式插入
-     *
-     * @param String $table 表名
-     * @param Array $arrayDataValue 字段与值
+     * @param String  $table          表名
+     * @param Array   $arrayDataValue 字段与值
      * @param Boolean $debug
      * @return Int
      */
@@ -264,9 +267,8 @@ class MyPDO
 
     /**
      * Delete 删除
-     *
-     * @param String $table 表名
-     * @param String $where 条件
+     * @param String  $table 表名
+     * @param String  $where 条件
      * @param Boolean $debug
      * @return Int
      */
@@ -285,8 +287,7 @@ class MyPDO
 
     /**
      * execSql 执行SQL语句
-     *
-     * @param String $strSql
+     * @param String  $strSql
      * @param Boolean $debug
      * @return Int
      */
@@ -300,11 +301,11 @@ class MyPDO
 
     /**
      * [execute]
-     * @desc 执行sql
+     * @desc   执行sql
      * @author limx
-     * @param $strSql sql语句
-     * @param array $bind 参数
-     * @param bool $debug 是否DEBUG
+     * @param       $strSql sql语句
+     * @param array $bind   参数
+     * @param bool  $debug  是否DEBUG
      */
     public function execute($strSql, $bind = [], $debug = false)
     {
@@ -316,10 +317,9 @@ class MyPDO
 
     /**
      * 获取字段最大值
-     *
-     * @param string $table 表名
+     * @param string $table      表名
      * @param string $field_name 字段名
-     * @param string $where 条件
+     * @param string $where      条件
      */
     public function getMaxValue($table, $field_name, $where = '', $debug = false)
     {
@@ -336,11 +336,10 @@ class MyPDO
 
     /**
      * 获取指定列的数量
-     *
      * @param string $table
      * @param string $field_name
      * @param string $where
-     * @param bool $debug
+     * @param bool   $debug
      * @return int
      */
     public function getCount($table, $field_name, $where = '', $debug = false)
@@ -354,9 +353,8 @@ class MyPDO
 
     /**
      * 获取表引擎
-     *
-     * @param String $dbName 库名
-     * @param String $tableName 表名
+     * @param String  $dbName    库名
+     * @param String  $tableName 表名
      * @param Boolean $debug
      * @return String
      */
@@ -386,7 +384,7 @@ class MyPDO
      * [addTable 添加新表]
      * @author limx
      * @param $tableName 表名
-     * @param $sql 添加新表用sql
+     * @param $sql       添加新表用sql
      */
     public function addTable($tableName, $sql)
     {
@@ -400,11 +398,11 @@ class MyPDO
     /**
      * [addFieldbyTable 增加表的字段 ]
      * @author limx
-     * @param $field 字段名
-     * @param $table 表名
-     * @param string $type 字段类型
-     * @param int $len 长度
-     * @param int $default 默认值
+     * @param        $field   字段名
+     * @param        $table   表名
+     * @param string $type    字段类型
+     * @param int    $len     长度
+     * @param int    $default 默认值
      * @param string $comment 注释
      * @return bool|Int
      */
@@ -438,7 +436,7 @@ class MyPDO
 
     /**
      * [trans desc]
-     * @desc 开启事务
+     * @desc   开启事务
      * @author limx
      */
     public function trans()
@@ -465,7 +463,6 @@ class MyPDO
     /**
      * transaction 通过事务处理多条SQL语句
      * 调用前需通过getTableEngine判断表引擎是否支持事务
-     *
      * @param array $arraySql
      * @return Boolean
      */
@@ -487,9 +484,8 @@ class MyPDO
 
     /**
      * checkFields 检查指定字段是否在指定数据表中存在
-     *
      * @param String $table
-     * @param array $arrayField
+     * @param array  $arrayField
      */
     private function checkFields($table, $arrayFields)
     {
@@ -518,7 +514,6 @@ class MyPDO
 
     /**
      * getFields 获取指定数据表中的全部字段名
-     *
      * @param String $table 表名
      * @return array
      */
@@ -548,7 +543,6 @@ class MyPDO
 
     /**
      * debug
-     *
      * @param mixed $debuginfo
      */
     private function debug($debuginfo)
@@ -559,7 +553,6 @@ class MyPDO
 
     /**
      * 输出错误信息
-     *
      * @param String $strErrMsg
      */
     private function outputError($strErrMsg)
